@@ -3,7 +3,6 @@ import { Repository } from "typeorm";
 import { User } from "./user.entity";
 import { ConflictException, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RegisterUserDto } from "./dto/register-user.dto";
 
 @Injectable()
 export class UsersRepository{
@@ -12,8 +11,7 @@ export class UsersRepository{
         private readonly repository: Repository<User>,
       ) {}
 
-      async createUser(registerUserDTO: RegisterUserDto): Promise<void>{
-        const { name, email, password } = registerUserDTO;
+      async createUser(name: string, email: string, password:string): Promise<void>{
         const user = this.repository.create({name, email, password});
         try {
           await this.repository.save(user)
@@ -23,6 +21,9 @@ export class UsersRepository{
           }
           throw new InternalServerErrorException();
         }
+      }
 
+      async findOneByEmail(email: string): Promise<User>{
+        return await this.repository.findOne({ where: { email } })
       }
 }
