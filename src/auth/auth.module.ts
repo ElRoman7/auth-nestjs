@@ -38,7 +38,7 @@ import { UserRegisteredListener } from 'src/mail/user-registered.listener';
   ],
   exports:[
     JwtStrategy,
-    PassportModule
+    PassportModule,
   ]
 })
 export class AuthModule {}
