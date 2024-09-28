@@ -9,9 +9,12 @@ import { JwtStrategy } from './jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MailModule } from 'src/mail/mail.module';
+import { UserRegisteredListener } from 'src/mail/user-registered.listener';
 
 @Module({
   imports:[
+    TypeOrmModule.forFeature([User]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -21,7 +24,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         signOptions: { expiresIn: '3600s' },
       }),
     }),
-    TypeOrmModule.forFeature([User])
+    MailModule
   ],
   controllers: [
     AuthController
@@ -31,6 +34,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     EncoderService, 
     JwtStrategy,
     UsersRepository, 
+    UserRegisteredListener
   ],
   exports:[
     JwtStrategy,

@@ -10,19 +10,19 @@ import { JwtPayload } from './interfaces/jwt.payload.interface';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    @InjectRepository(User)
     private readonly usersRepository: UsersRepository,
     private readonly configService: ConfigService, // Inyectamos el ConfigService
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Extrae el token del header Authorization
       secretOrKey: configService.get<string>('JWT_SECRET'), // Tomamos el secreto del .env
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Extrae el token del header Authorization
     });
   }
 
   async validate(payload: JwtPayload): Promise<User> {
     const { email } = payload;
-    const user = this.usersRepository.findOneByEmail(email)
+    const user = this.usersRepository.findOneByEmail(email);
+    
     if(!user){
         throw new UnauthorizedException();
     }

@@ -3,6 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { User } from './auth/user.entity';
+import { MailModule } from './mail/mail.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { TaskModule } from './task/task.module';
+import { Task } from './task/entities/task.entity';
 
 @Module({
   imports: [
@@ -19,11 +23,14 @@ import { User } from './auth/user.entity';
         username: configService.get<string>('DATABASE_USERNAME'),
         password: configService.get<string>('DATABASE_PASSWORD'),
         database: configService.get<string>('DATABASE_NAME'),
-        entities: [User],
+        entities: [User, Task],
         synchronize: true,
       }),
     }),
+    EventEmitterModule.forRoot(), // Importa el módulo de eventos
     AuthModule,
+    MailModule,
+    TaskModule,
   ],
   controllers: [],
   providers: [],

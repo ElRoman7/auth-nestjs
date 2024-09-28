@@ -5,16 +5,17 @@ import { ConflictException, Injectable, InternalServerErrorException, NotFoundEx
 import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
-export class UsersRepository{
+export class UsersRepository {
   constructor(
     @InjectRepository(User)
     private readonly repository: Repository<User>,
   ) {}
 
-  async createUser(name: string, email: string, password:string, activationToken: string): Promise<void>{
+  async createUser(name: string, email: string, password:string, activationToken: string): Promise<User>{
     const user = this.repository.create({name, email, password, activationToken});
     try {
       await this.repository.save(user)
+      return user;
     } catch (error) {
       if(error.code == "ER_DUP_ENTRY"){
         throw new ConflictException('This email is already registered');
@@ -63,7 +64,7 @@ export class UsersRepository{
       console.log(error);
       
     }
-  }
+  };
 
   async finOneByResetPasswordToken(resetPasswordToken: string): Promise<User>{
     const user: User = await this.repository.findOne(
@@ -77,14 +78,14 @@ export class UsersRepository{
       throw new NotFoundException()
     }
     return user;
-  }
+  };
 
   async saveUserChanges(user: User): Promise<void>{
     this.repository.save(user);
-  }
+  };
 
   async deleteResetPasswordToken(user: User): Promise<void>{
     user.resetPasswordToken = null;
     this.repository.save(user)
-  }
+  };
 }
