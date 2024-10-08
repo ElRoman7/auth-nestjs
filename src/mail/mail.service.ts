@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateMailDto } from './dto/create-mail.dto';
 import { UpdateMailDto } from './dto/update-mail.dto';
 import { MailerService } from '@nestjs-modules/mailer';
-import { User } from 'src/auth/user.entity';
+import { User } from 'src/users/user.entity';
 import { ConfigService } from '@nestjs/config';
 import { TitleCasePipe } from './pipes/title-case.pipe';
 

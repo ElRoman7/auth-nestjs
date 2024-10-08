@@ -1,7 +1,6 @@
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { UserRegisteredEvent } from '../auth/user-registered.event'; // Asegúrate de que la ruta sea correcta
 import { MailService } from './mail.service';
-import { User } from '../auth/user.entity'; // Asegúrate de que la ruta sea correcta
 
 @EventsHandler(UserRegisteredEvent)
 export class UserRegisteredListener implements IEventHandler<UserRegisteredEvent> {

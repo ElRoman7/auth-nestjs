@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
-import { User } from './users/user.entity';
 import { MailModule } from './mail/mail.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TaskModule } from './task/task.module';
 import { Task } from './task/entities/task.entity';
 import { UsersModule } from './users/users.module';
 import { UsersService } from './users/users.service';
+import { User } from './users/user.entity';
 
 
 @Module({
