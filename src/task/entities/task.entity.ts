@@ -34,8 +34,8 @@ export class Task {
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
 
-  @Column({ type: 'int', nullable: true })
-  user_id: number;
+  @Column({ type: 'uuid' })
+  user_id: string;
 
   @Column({ type: 'datetime', nullable: true })
   completed_at: Date;

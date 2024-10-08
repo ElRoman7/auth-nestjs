@@ -18,27 +18,10 @@ import { Response } from 'express'; // Asegúrate de que esta línea esté prese
 export class AuthController {
     constructor(private authService: AuthService){ }
 
-    @Post('/register')
-    async register(@Body() registerUserDto: RegisterUserDto): Promise<void>{
-       return this.authService.registerUser(registerUserDto) 
-    }
 
     @Post('/login')
     login(@Body() loginDto: LoginDTO):Promise<{ accessToken: string }>{
         return this.authService.login(loginDto)
-    }
-
-    @Get('/activate-account')
-    async activateAccount(@Query() activateUserDto: ActivateUserDto, @Res() response: Response): Promise<void> {
-        try {
-            await this.authService.activateUser(activateUserDto);
-            return response.redirect('http://localhost:4200/success-activation'); // URL de tu frontend
-        } catch (error) {
-            if (error instanceof UnprocessableEntityException && error.message === 'User already activated.') {
-                return response.redirect('http://localhost:4200/success-activation'); // Redirigir a la misma página de éxito
-            }
-            throw error; // Lanzar error si no es por activación ya realizada
-        }
     }
 
     @Patch('request-reset-password')
@@ -51,10 +34,6 @@ export class AuthController {
         return this.authService.resetPassword(resetPasswordDto);
     }
 
-    @Patch('change-password')
-    @UseGuards(AuthGuard())
-    changePassword( @Body() changePasswordDto: ChangePasswordDto, @GetUser() user: User ): Promise<void> {
-        return this.authService.changePassword(changePasswordDto, user);
-    }
+
 
 }

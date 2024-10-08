@@ -40,9 +40,12 @@ export class AuthService {
         const { email, password } = loginDTO
         const user: User = await this.usersRepository.findOneByEmail(email);
         if(await this.encoderService.checkPassword(password, user.password)){
-            const payload : JwtPayload = {id: user.id, email: user.email, active: user.active}
-            const accessToken = await this.jwtService.sign(payload);
-            return {accessToken};
+            if(user.active){
+                const payload : JwtPayload = {id: user.id, email: user.email, active: user.active}
+                const accessToken = await this.jwtService.sign(payload);
+                return {accessToken};
+            }
+            throw new UnauthorizedException('Please Confirm your account');
         }
         throw new UnauthorizedException('Please check your credentials');
     }

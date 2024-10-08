@@ -4,25 +4,30 @@ import { UpdateMailDto } from './dto/update-mail.dto';
 import { MailerService } from '@nestjs-modules/mailer';
 import { User } from 'src/auth/user.entity';
 import { ConfigService } from '@nestjs/config';
+import { TitleCasePipe } from './pipes/title-case.pipe';
 
 @Injectable()
 export class MailService {
   
   private baseUrl : string;
+  private frontUrl : string;
+  private titleCasePipe = new TitleCasePipe(); // Crea una instancia del pipe
   
   constructor(private mailerService: MailerService, private readonly configService: ConfigService,) {
     this.baseUrl = this.configService.get<string>('BASE_URL');
+    this.frontUrl = this.configService.get<string>('FRONTEND_URL');
   }
 
   async sendUserConfirmation(user:User): Promise<void> {
     const { id, name ,activationToken, email } = user
     const url = `${this.baseUrl}/auth/activate-account?id=${id}&code=${activationToken}`;
+    const formattedName = this.titleCasePipe.transform(name)
     return await this.mailerService.sendMail({
       to: email,
       template: './confirmation',
       context:{
         url: url,
-        name: name
+        name: formattedName
       }
 
     })
@@ -30,14 +35,14 @@ export class MailService {
 
   async sendUserResetPassword(user:User): Promise<void> {
     const { name, email, resetPasswordToken } = user;
-
-    const url =`${this.baseUrl}/reset-password/${resetPasswordToken}`;
+    const url =`${this.frontUrl}/auth/reset-password?token=${resetPasswordToken}`;
+    const formattedName = this.titleCasePipe.transform(name)
     return await this.mailerService.sendMail({
       to: email,
       template: './reset-password',
       context:{
         url: url,
-        name: name
+        name: formattedName
       }
 
     })
